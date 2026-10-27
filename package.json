@@ -1,0 +1,66 @@
+{
+  "name": "tally_bridge_exe",
+  "version": "1.0.0",
+  "description": "Tally Bridge Desktop Application",
+  "main": "electron/main.js",
+  "type": "commonjs",
+  "scripts": {
+    "prepare-backend": "node prepare-backend.cjs",
+    "ui:build": "npm run build --prefix ui",
+    "electron": "electron .",
+    "dist": "node prepare-backend.cjs && npm run ui:build && npx electron-builder --win"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^43.4.0",
+    "electron-builder": "^26.15.3"
+  },
+  "build": {
+    "appId": "com.tallyconnector.bridge",
+    "productName": "FinixBooks",
+    "afterPack": "after-pack.cjs",
+    "directories": {
+      "output": "dist-exe"
+    },
+    "files": [
+      "electron/**/*",
+      "ui/dist/**/*"
+    ],
+    "extraResources": [
+      {
+        "from": "dist-backend",
+        "to": "backend",
+        "filter": [
+          "**/*",
+          "node_modules/**/*",
+          ".env"
+        ]
+      },
+      {
+        "from": "runtime/node.exe",
+        "to": "runtime/node.exe"
+      },
+      {
+        "from": "tools/nssm.exe",
+        "to": "nssm.exe"
+      }
+    ],
+    "win": {
+      "icon": "electron/icon.ico",
+      "target": [
+        "nsis",
+        "portable"
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": true,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "include": "installer.nsh"
+    }
+  }
+}
